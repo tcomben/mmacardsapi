@@ -20,7 +20,7 @@ jobs:
     
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/mmacardsapi:${{ steps.bump_version.outputs.new_version }} --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/mmacardsapi:latest
+      run: docker build . --file Dockerfile --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/mmacardsapi:${{ steps.bump_version.outputs.release_version }} --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/mmacardsapi:latest
 
     - name: Azure Container Registry Login
       uses: Azure/docker-login@v1
