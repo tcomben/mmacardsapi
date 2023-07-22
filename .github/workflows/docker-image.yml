@@ -12,15 +12,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Bump version
-      uses: PackagrIO/action-bumpr-node@v0.0.1
-    
+    steps:    
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/mmacardsapi:${{ steps.bump_version.outputs.release_version }} --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/mmacardsapi:latest
+      run: docker build . --file Dockerfile --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/mmacardsapi:latest
 
     - name: Azure Container Registry Login
       uses: Azure/docker-login@v1
