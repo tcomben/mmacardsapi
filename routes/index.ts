@@ -18,7 +18,11 @@ router.get('/events', function (req, res, next) {
   res.setHeader('Content-Type', 'application/json');
 
   const selectedPromotions = parsePromotions(req);
-  const upcomingEventList = dataManager.upcomingEventList?.filter(x => selectedPromotions.indexOf(x.Promotion) > -1);
+  let upcomingEventList = dataManager.upcomingEventList;
+
+  if (selectedPromotions && selectedPromotions.length > 0) {
+    upcomingEventList = upcomingEventList?.filter(x => selectedPromotions.indexOf(x.Promotion) > -1);
+  }
 
   res.end(JSON.stringify(upcomingEventList));
 });
@@ -27,7 +31,11 @@ router.get('/archive', function (req, res, next) {
   res.setHeader('Content-Type', 'application/json');
 
   const selectedPromotions = parsePromotions(req);
-  const archiveEventList = dataManager.archiveEventList?.filter(x => selectedPromotions.indexOf(x.Promotion) > -1);
+  let archiveEventList = dataManager.archiveEventList;
+
+  if (selectedPromotions && selectedPromotions.length) {
+    archiveEventList = archiveEventList?.filter(x => selectedPromotions.indexOf(x.Promotion) > -1);
+  }
 
   res.end(JSON.stringify(archiveEventList));
 });
@@ -75,7 +83,7 @@ router.get('/root', function (req, res, next) {
   const selectedPromotions = parsePromotions(req);
 
   // if selected promotions includes UFC that's our root
-  if (selectedPromotions === null || selectedPromotions.length === 0 || selectedPromotions.indexOf(Promotion.UFC) > -1) {
+  if (!selectedPromotions || selectedPromotions.length === 0 || selectedPromotions.indexOf(Promotion.UFC) > -1) {
     rootEvent = dataManager.possibleRoots.filter(x => x.Promotion === Promotion.UFC)[0];
   } else {
     rootEvent = dataManager.possibleRoots.filter(x => selectedPromotions.indexOf(x.Promotion) > -1)[0];
