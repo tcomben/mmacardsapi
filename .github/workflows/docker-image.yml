@@ -13,16 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Get next version
-      uses: reecetech/version-increment@2023.4.1
-      id: version
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Get Next Version
+      id: semver
+      uses: ietf-tools/semver-action@v1
       with:
-        scheme: semver
-        increment: patch
+        token: ${{ github.token }}
+        branch: main
     
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build ./src --file src/Dockerfile --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/mmacardsapi:${{ steps.version.outputs.version }} --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/mmacardsapi:latest
+      run: docker build ./src --file src/Dockerfile --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/mmacardsapi:${{ steps.semver.outputs.next }} --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/mmacardsapi:latest
 
     - name: Azure Container Registry Login
       uses: Azure/docker-login@v1
