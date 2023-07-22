@@ -1,17 +1,18 @@
 import { BlobServiceClient } from '@azure/storage-blob';
-import Event from '../shared/Event'
+import Event, { Promotion } from '../shared/Event'
 import EventLite from '../shared/EventLite'
 import SearchResult from '../shared/SearchResult';
 
 export default class DataManager {
     private client: BlobServiceClient
-    private upcomingEvents: Event[] = [] as Event[];
-    private archiveEvents: Event[] = [] as Event[];
+    public upcomingEvents: Event[] = [] as Event[];
+    public archiveEvents: Event[] = [] as Event[];
 
     // views
     public upcomingEventList: EventLite[] = [] as EventLite[];
     public archiveEventList: EventLite[] = [] as EventLite[];
     public searchResults: SearchResult[] = [] as SearchResult[];
+    public possibleRoots: Event[] = [] as Event[];
 
     constructor() {
         this.client = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONN as string);
@@ -32,9 +33,20 @@ export default class DataManager {
         this.upcomingEvents = JSON.parse(eventsJson) as Event[];
         this.archiveEvents = JSON.parse(archiveEventsJson) as Event[];
 
+        for (const upcomingEvent of this.upcomingEvents) {
+            upcomingEvent.MainEventDateTime = typeof upcomingEvent.MainEventDateTime === 'string' ? new Date(upcomingEvent.MainEventDateTime) : upcomingEvent.MainEventDateTime;
+            upcomingEvent.PrelimsEventDateTime = typeof upcomingEvent.PrelimsEventDateTime === 'string' ? new Date(upcomingEvent.PrelimsEventDateTime) : upcomingEvent.PrelimsEventDateTime;
+        }
+
+        for (const archiveEvent of this.archiveEvents) {
+            archiveEvent.MainEventDateTime = typeof archiveEvent.MainEventDateTime === 'string' ? new Date(archiveEvent.MainEventDateTime) : archiveEvent.MainEventDateTime;
+            archiveEvent.PrelimsEventDateTime = typeof archiveEvent.PrelimsEventDateTime === 'string' ? new Date(archiveEvent.PrelimsEventDateTime) : archiveEvent.PrelimsEventDateTime;
+        }
+
         this.upcomingEventList = this.createUpcomingEventList();
         this.archiveEventList = this.createArchiveEventList();
         this.searchResults = this.createSearchResults();
+        this.possibleRoots = this.createPossibleRoots();
 
         console.log("data ready");
     }
@@ -44,7 +56,7 @@ export default class DataManager {
             const el = new EventLite();
             el.Id = x.Id;
             el.ShortName = x.ShortName;
-            el.PrelimsEventDateTime = typeof x.PrelimsEventDateTime === 'string' ? new Date(x.PrelimsEventDateTime) : x.PrelimsEventDateTime;
+            el.PrelimsEventDateTime = x.PrelimsEventDateTime;
             el.Promotion = x.Promotion;
             return el;
         }).sort((a, b) => {
@@ -57,7 +69,7 @@ export default class DataManager {
             const el = new EventLite();
             el.Id = x.Id;
             el.ShortName = x.ShortName;
-            el.PrelimsEventDateTime = typeof x.PrelimsEventDateTime === 'string' ? new Date(x.PrelimsEventDateTime) : x.PrelimsEventDateTime;
+            el.PrelimsEventDateTime = x.PrelimsEventDateTime;
             el.Promotion = x.Promotion;
             return el;
         }).sort((a, b) => {
@@ -147,5 +159,30 @@ export default class DataManager {
         }
 
         return results;
+    }
+
+    createPossibleRoots(): Event[] {
+        const hoursToAdd = 16;
+        const now = new Date();
+        const possibleRoots: Event[] = [] as Event[];
+        const foundPromotions: Promotion[] = [] as Promotion[];
+
+        const upcomingEvents = this.upcomingEvents.sort((a, b) => {
+            return a.PrelimsEventDateTime.getTime() - b.PrelimsEventDateTime.getTime();
+        })
+
+        for (const event of this.upcomingEvents) {
+            if (foundPromotions.indexOf(event.Promotion) === -1) {
+                const mainTest = new Date(event.MainEventDateTime.getTime());
+                mainTest.setTime(mainTest.getTime() + (hoursToAdd * 60 * 60 * 1000));
+
+                if (mainTest > now) {
+                    foundPromotions.push(event.Promotion);
+                    possibleRoots.push(event);
+                }
+            }
+        }
+
+        return possibleRoots;
     }
 }
