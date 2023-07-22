@@ -10,7 +10,7 @@ const dataManager: DataManager = new DataManager();
 dataManager.refreshData();
 
 const parsePromotions = (req): Promotion[] => {
-  return req.query?.selectedPromotions?.split(',')?.map(x => parseInt(x) as Promotion) ?? [] as Promotion[];
+  return req.query?.selectedPromotions?.split(',')?.map(x => parseInt(x) as Promotion).filter(x => isNaN(x) === false) ?? [] as Promotion[];
 }
 
 /* GET home page. */
