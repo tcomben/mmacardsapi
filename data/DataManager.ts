@@ -15,7 +15,7 @@ export default class DataManager {
     public possibleRoots: Event[] = [] as Event[];
 
     constructor() {
-        this.client = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONN as string);
+        this.client = BlobServiceClient.fromConnectionString(process.env.CUSTOMCONNSTR_AZURE_STORAGE_CONN as string);
     }
 
     async refreshData() {
