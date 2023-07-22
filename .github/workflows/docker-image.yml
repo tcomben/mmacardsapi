@@ -24,11 +24,3 @@ jobs:
         login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
-
-    - name: Push Docker Image
-      uses: julioarruda/pushimagetoregistry@v1
-      with:
-        acr-tokenname: ${{ secrets.REGISTRY_USERNAME }}
-        acr-token: ${{ secrets.REGISTRY_PASSWORD }}
-        acr-account: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-        acr-imagename: mmacardsapi:$(date +%s)
