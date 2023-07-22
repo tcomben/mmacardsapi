@@ -12,10 +12,16 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    steps:   
+    steps:
+    - name: Bump version
+      uses: copapow/version-bump-package@v1
+      with:
+        default_branch: main
+        github_token: ${{secrets.GITHUB_TOKEN}}
+    
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build ./src --file src/Dockerfile --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/mmacardsapi:latest
+      run: docker build ./src --file src/Dockerfile --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/mmacardsapi:${{ steps.bump_version.outputs.new_version }} --tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/mmacardsapi:latest
 
     - name: Azure Container Registry Login
       uses: Azure/docker-login@v1
