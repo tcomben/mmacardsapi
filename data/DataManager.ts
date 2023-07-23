@@ -1,7 +1,7 @@
 import { BlobServiceClient } from '@azure/storage-blob';
 import Event, { Promotion } from '../shared/Event'
 import EventLite from '../shared/EventLite'
-import SearchResult from '../shared/SearchResult';
+import SearchResult, { EventLiteWithFighterId } from '../shared/SearchResult';
 
 export default class DataManager {
     private client: BlobServiceClient
@@ -82,9 +82,9 @@ export default class DataManager {
     }
 
     createSearchResults(): SearchResult[] {
-        const searchLookup = {} as Record<string, EventLite[]>;
+        const searchLookup = {} as Record<string, EventLiteWithFighterId[]>;
         for (const upcomingEvent of this.upcomingEvents) {
-            const el = new EventLite();
+            const el = new EventLiteWithFighterId();
             el.Id = upcomingEvent.Id;
             el.MainEventDateTime = upcomingEvent.MainEventDateTime;
             el.PrelimsEventDateTime = upcomingEvent.PrelimsEventDateTime;
@@ -95,28 +95,36 @@ export default class DataManager {
             for (const mainFight of upcomingEvent.MainFights) {
                 const firstFighterName = mainFight.FirstFighter.AltName || mainFight.FirstFighter.Name;
                 if (!searchLookup[firstFighterName]) {
-                    searchLookup[firstFighterName] = [] as EventLite[];
+                    searchLookup[firstFighterName] = [] as EventLiteWithFighterId[];
                 }
-                searchLookup[firstFighterName].push(el);
+                const fel = Object.assign({}, el) as EventLiteWithFighterId;
+                fel.FighterId = mainFight.FirstFighter.Id;
+                searchLookup[firstFighterName].push(fel);
 
                 const secondFighterName = mainFight.SecondFighter.AltName || mainFight.SecondFighter.Name;
                 if (!searchLookup[secondFighterName]) {
-                    searchLookup[secondFighterName] = [] as EventLite[];
+                    searchLookup[secondFighterName] = [] as EventLiteWithFighterId[];
                 }
-                searchLookup[secondFighterName].push(el);
+                const sel = Object.assign({}, el) as EventLiteWithFighterId;
+                sel.FighterId = mainFight.SecondFighter.Id;
+                searchLookup[secondFighterName].push(sel);
             }
             for (const prelimFight of upcomingEvent.PrelimFights) {
                 const firstFighterName = prelimFight.FirstFighter.AltName || prelimFight.FirstFighter.Name;
                 if (!searchLookup[firstFighterName]) {
-                    searchLookup[firstFighterName] = [] as EventLite[];
+                    searchLookup[firstFighterName] = [] as EventLiteWithFighterId[];
                 }
-                searchLookup[firstFighterName].push(el);
+                const fel = Object.assign({}, el) as EventLiteWithFighterId;
+                fel.FighterId = prelimFight.FirstFighter.Id;
+                searchLookup[firstFighterName].push(fel);
 
                 const secondFighterName = prelimFight.SecondFighter.AltName || prelimFight.SecondFighter.Name;
                 if (!searchLookup[secondFighterName]) {
-                    searchLookup[secondFighterName] = [] as EventLite[];
+                    searchLookup[secondFighterName] = [] as EventLiteWithFighterId[];
                 }
-                searchLookup[secondFighterName].push(el);
+                const sel = Object.assign({}, el) as EventLiteWithFighterId;
+                sel.FighterId = prelimFight.SecondFighter.Id;
+                searchLookup[secondFighterName].push(sel);
             }
         }
 
@@ -132,28 +140,36 @@ export default class DataManager {
             for (const mainFight of archiveEvent.MainFights) {
                 const firstFighterName = mainFight.FirstFighter.AltName || mainFight.FirstFighter.Name;
                 if (!searchLookup[firstFighterName]) {
-                    searchLookup[firstFighterName] = [] as EventLite[];
+                    searchLookup[firstFighterName] = [] as EventLiteWithFighterId[];
                 }
-                searchLookup[firstFighterName].push(el);
+                const fel = Object.assign({}, el) as EventLiteWithFighterId;
+                fel.FighterId = mainFight.FirstFighter.Id;
+                searchLookup[firstFighterName].push(fel);
 
                 const secondFighterName = mainFight.SecondFighter.AltName || mainFight.SecondFighter.Name;
                 if (!searchLookup[secondFighterName]) {
-                    searchLookup[secondFighterName] = [] as EventLite[];
+                    searchLookup[secondFighterName] = [] as EventLiteWithFighterId[];
                 }
-                searchLookup[secondFighterName].push(el);
+                const sel = Object.assign({}, el) as EventLiteWithFighterId;
+                sel.FighterId = mainFight.SecondFighter.Id;
+                searchLookup[secondFighterName].push(sel);
             }
             for (const prelimFight of archiveEvent.PrelimFights) {
                 const firstFighterName = prelimFight.FirstFighter.AltName || prelimFight.FirstFighter.Name;
                 if (!searchLookup[firstFighterName]) {
-                    searchLookup[firstFighterName] = [] as EventLite[];
+                    searchLookup[firstFighterName] = [] as EventLiteWithFighterId[];
                 }
-                searchLookup[firstFighterName].push(el);
+                const fel = Object.assign({}, el) as EventLiteWithFighterId;
+                fel.FighterId = prelimFight.FirstFighter.Id;
+                searchLookup[firstFighterName].push(fel);
 
                 const secondFighterName = prelimFight.SecondFighter.AltName || prelimFight.SecondFighter.Name;
                 if (!searchLookup[secondFighterName]) {
-                    searchLookup[secondFighterName] = [] as EventLite[];
+                    searchLookup[secondFighterName] = [] as EventLiteWithFighterId[];
                 }
-                searchLookup[secondFighterName].push(el);
+                const sel = Object.assign({}, el) as EventLiteWithFighterId;
+                sel.FighterId = prelimFight.SecondFighter.Id;
+                searchLookup[secondFighterName].push(sel);
             }
         }
 

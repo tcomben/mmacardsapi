@@ -4,5 +4,9 @@ import EventLite from "./EventLite";
 
 export default class SearchResult {
     public FighterName: string = '';
-    public Events: EventLite[] = [] as EventLite[];
+    public Events: EventLiteWithFighterId[] = [] as EventLiteWithFighterId[];
+}
+
+export class EventLiteWithFighterId extends EventLite {
+    public FighterId: string = '';
 }
