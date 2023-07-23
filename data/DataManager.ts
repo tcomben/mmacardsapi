@@ -56,6 +56,7 @@ export default class DataManager {
             const el = new EventLite();
             el.Id = x.Id;
             el.ShortName = x.ShortName;
+            el.MainEventDateTime = x.MainEventDateTime;
             el.PrelimsEventDateTime = x.PrelimsEventDateTime;
             el.Promotion = x.Promotion;
             return el;
@@ -69,6 +70,7 @@ export default class DataManager {
             const el = new EventLite();
             el.Id = x.Id;
             el.ShortName = x.ShortName;
+            el.MainEventDateTime = x.MainEventDateTime;
             el.PrelimsEventDateTime = x.PrelimsEventDateTime;
             el.Promotion = x.Promotion;
             return el;
@@ -82,6 +84,7 @@ export default class DataManager {
         for (const upcomingEvent of this.upcomingEvents) {
             const el = new EventLite();
             el.Id = upcomingEvent.Id;
+            el.MainEventDateTime = upcomingEvent.MainEventDateTime;
             el.PrelimsEventDateTime = upcomingEvent.PrelimsEventDateTime;
             el.Promotion = upcomingEvent.Promotion;
             el.ShortName = upcomingEvent.ShortName;
@@ -117,6 +120,7 @@ export default class DataManager {
         for (const archiveEvent of this.archiveEvents) {
             const el = new EventLite();
             el.Id = archiveEvent.Id;
+            el.MainEventDateTime = archiveEvent.MainEventDateTime;
             el.PrelimsEventDateTime = archiveEvent.PrelimsEventDateTime;
             el.Promotion = archiveEvent.Promotion;
             el.ShortName = archiveEvent.ShortName;

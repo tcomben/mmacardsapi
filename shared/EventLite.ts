@@ -5,4 +5,5 @@ export default class EventLite {
     public ShortName: string = '';
     public Promotion: Promotion = Promotion.UFC;
     public PrelimsEventDateTime: Date = new Date();
+    public MainEventDateTime: Date = new Date();
 }
