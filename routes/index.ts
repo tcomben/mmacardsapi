@@ -43,10 +43,10 @@ router.get('/archive', function (req, res, next) {
 router.get('/search', function (req, res, next) {
   res.setHeader('Content-Type', 'application/json');
 
-  const searchQuery = req.query.name;
+  const searchQuery = req.query.name.toLowerCase();
 
   if (searchQuery && searchQuery.length > 0) {
-    const searchResults = dataManager.searchResults?.filter(x => x.FighterName.indexOf(searchQuery) > -1) ?? [] as SearchResult[];
+    const searchResults = dataManager.searchResults?.filter(x => x.FighterName.toLowerCase().indexOf(searchQuery) > -1) ?? [] as SearchResult[];
     res.end(JSON.stringify(searchResults));
   } else {
     res.end(JSON.stringify([]));
