@@ -62,7 +62,7 @@ export default class DataManager {
             el.Promotion = x.Promotion;
             return el;
         }).sort((a, b) => {
-            return b.PrelimsEventDateTime.getTime() - a.PrelimsEventDateTime.getTime();
+            return a.PrelimsEventDateTime.getTime() - b.PrelimsEventDateTime.getTime();
         });
     }
 
