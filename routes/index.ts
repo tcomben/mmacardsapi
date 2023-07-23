@@ -91,4 +91,11 @@ router.get('/root', function (req, res, next) {
   res.end(JSON.stringify(rootEvent));
 });
 
+router.get('/all', function (req, res, next) {
+  res.setHeader('Content-Type', 'application/json');
+  const allEvents = [...dataManager.archiveEvents, ...dataManager.upcomingEvents];
+  res.end(JSON.stringify(allEvents));
+});
+
+
 module.exports = router;
