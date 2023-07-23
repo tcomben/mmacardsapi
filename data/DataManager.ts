@@ -55,6 +55,7 @@ export default class DataManager {
         return this.upcomingEvents.map(x => {
             const el = new EventLite();
             el.Id = x.Id;
+            el.Name = x.Name;
             el.ShortName = x.ShortName;
             el.MainEventDateTime = x.MainEventDateTime;
             el.PrelimsEventDateTime = x.PrelimsEventDateTime;
@@ -69,6 +70,7 @@ export default class DataManager {
         return this.archiveEvents.map(x => {
             const el = new EventLite();
             el.Id = x.Id;
+            el.Name = x.Name;
             el.ShortName = x.ShortName;
             el.MainEventDateTime = x.MainEventDateTime;
             el.PrelimsEventDateTime = x.PrelimsEventDateTime;
@@ -87,6 +89,7 @@ export default class DataManager {
             el.MainEventDateTime = upcomingEvent.MainEventDateTime;
             el.PrelimsEventDateTime = upcomingEvent.PrelimsEventDateTime;
             el.Promotion = upcomingEvent.Promotion;
+            el.Name = upcomingEvent.Name;
             el.ShortName = upcomingEvent.ShortName;
 
             for (const mainFight of upcomingEvent.MainFights) {
@@ -123,6 +126,7 @@ export default class DataManager {
             el.MainEventDateTime = archiveEvent.MainEventDateTime;
             el.PrelimsEventDateTime = archiveEvent.PrelimsEventDateTime;
             el.Promotion = archiveEvent.Promotion;
+            el.Name = archiveEvent.Name;
             el.ShortName = archiveEvent.ShortName;
 
             for (const mainFight of archiveEvent.MainFights) {
