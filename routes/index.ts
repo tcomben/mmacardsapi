@@ -9,6 +9,9 @@ import SearchResult from "../shared/SearchResult";
 const dataManager: DataManager = new DataManager();
 dataManager.refreshData();
 
+const minsToRefresh = isNaN(Number(process.env.MINS_REFRESH)) ? 60 : Number(process.env.MINS_REFRESH);
+setInterval(async () => { await dataManager.refreshData(); }, minsToRefresh * 60000);
+
 const parsePromotions = (req): Promotion[] => {
   return req.query?.selectedPromotions?.split(',')?.map(x => parseInt(x) as Promotion).filter(x => isNaN(x) === false) ?? [] as Promotion[];
 }
